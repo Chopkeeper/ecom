@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Order } from '../types';
+import { Database, Server, ShieldCheck, CheckCircle2 } from 'lucide-react';
 
 interface AdminDashboardProps {
   orders: Order[];
@@ -49,9 +50,48 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ orders }) => {
   const totalRevenue = chartData.reduce((acc, curr) => acc + curr.revenue, 0);
 
   return (
-    <div className="p-6 bg-gray-50 min-h-screen">
+    <div className="p-6 bg-gray-50/90 min-h-screen">
       <h1 className="text-3xl font-bold text-advice-darkBlue mb-6">Admin Dashboard</h1>
       
+      {/* System Status Panel (New Feature for MongoDB Config) */}
+      <div className="bg-gray-800 text-white p-6 rounded-lg shadow-lg mb-8">
+        <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+          <Server size={24} className="text-green-400"/> System Status
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+           <div className="flex flex-col gap-2 p-3 bg-gray-700 rounded border border-gray-600">
+              <div className="flex items-center gap-2 text-gray-300 text-sm uppercase font-bold">
+                 <Database size={16} /> Database Engine
+              </div>
+              <div className="text-lg font-mono text-green-400">MongoDB (NoSQL)</div>
+              <div className="text-xs text-gray-400">Mongoose ODM Ready</div>
+           </div>
+           
+           <div className="flex flex-col gap-2 p-3 bg-gray-700 rounded border border-gray-600">
+              <div className="flex items-center gap-2 text-gray-300 text-sm uppercase font-bold">
+                 <ShieldCheck size={16} /> Auth Configuration
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-400 text-sm">User:</span>
+                <span className="font-mono text-yellow-400">admin</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-400 text-sm">Pass:</span>
+                <span className="font-mono text-yellow-400">********er</span>
+              </div>
+           </div>
+
+           <div className="flex flex-col gap-2 p-3 bg-gray-700 rounded border border-gray-600">
+              <div className="flex items-center gap-2 text-gray-300 text-sm uppercase font-bold">
+                 <CheckCircle2 size={16} /> Connection String
+              </div>
+              <code className="text-xs bg-black p-2 rounded text-gray-400 break-all">
+                 mongodb://admin:Chopkeeper@localhost:27017/advice_ecommerce
+              </code>
+           </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow border-l-4 border-blue-500">
            <div className="text-gray-500 text-sm">Total Revenue (Year)</div>

@@ -4,11 +4,17 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     id: '1',
     name: 'Notebook Asus TUF Gaming F15',
-    description: 'Intel Core i5-11400H / 8GB / 512GB SSD / RTX 3050',
+    description: 'Intel Core i5-11400H / 8GB / 512GB SSD / RTX 3050. The ASUS TUF Gaming F15 is a powerful Windows 10 gaming laptop that combines gaming performance with up to a narrow bezel IPS-type panel and an extended lifespan.',
     price: 24990,
     discountPercent: 10,
     category: 'Notebook',
-    image: 'https://picsum.photos/300/300?random=1',
+    image: 'https://picsum.photos/500/500?random=1',
+    images: [
+      'https://picsum.photos/800/800?random=1',
+      'https://picsum.photos/800/800?random=101',
+      'https://picsum.photos/800/800?random=102',
+      'https://picsum.photos/800/800?random=103'
+    ],
     stock: 50,
     shippingCost: 150
   },
@@ -19,7 +25,11 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 3500,
     discountPercent: 0,
     category: 'Monitor',
-    image: 'https://picsum.photos/300/300?random=2',
+    image: 'https://picsum.photos/500/500?random=2',
+    images: [
+      'https://picsum.photos/800/800?random=2',
+      'https://picsum.photos/800/800?random=201'
+    ],
     stock: 20,
     shippingCost: 100
   },
@@ -30,7 +40,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 9490,
     discountPercent: 5,
     category: 'CPU',
-    image: 'https://picsum.photos/300/300?random=3',
+    image: 'https://picsum.photos/500/500?random=3',
+    images: ['https://picsum.photos/800/800?random=3'],
     stock: 15,
     shippingCost: 50
   },
@@ -41,7 +52,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 10900,
     discountPercent: 2,
     category: 'VGA',
-    image: 'https://picsum.photos/300/300?random=4',
+    image: 'https://picsum.photos/500/500?random=4',
+    images: ['https://picsum.photos/800/800?random=4'],
     stock: 10,
     shippingCost: 80
   },
@@ -52,7 +64,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 2190,
     discountPercent: 0,
     category: 'RAM',
-    image: 'https://picsum.photos/300/300?random=5',
+    image: 'https://picsum.photos/500/500?random=5',
+    images: ['https://picsum.photos/800/800?random=5'],
     stock: 100,
     shippingCost: 40
   },
@@ -63,7 +76,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 1390,
     discountPercent: 15,
     category: 'SSD',
-    image: 'https://picsum.photos/300/300?random=6',
+    image: 'https://picsum.photos/500/500?random=6',
+    images: ['https://picsum.photos/800/800?random=6'],
     stock: 45,
     shippingCost: 40
   }

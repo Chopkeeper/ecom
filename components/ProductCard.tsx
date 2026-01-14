@@ -1,6 +1,7 @@
 import React from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Eye } from 'lucide-react';
 import { Product } from '../types';
+import { Link } from 'react-router-dom';
 
 interface ProductCardProps {
   product: Product;
@@ -19,21 +20,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAdd }) => {
          </div>
        )}
 
-       {/* Image */}
-       <div className="p-4 flex justify-center items-center h-48 overflow-hidden bg-white">
-          <img 
-            src={product.image} 
-            alt={product.name} 
-            className="object-contain max-h-full group-hover:scale-105 transition-transform duration-300"
-          />
-       </div>
+       {/* Image - Clickable */}
+       <Link to={`/product/${product.id}`} className="block">
+         <div className="p-4 flex justify-center items-center h-48 overflow-hidden bg-white cursor-pointer">
+            <img 
+              src={product.image} 
+              alt={product.name} 
+              className="object-contain max-h-full group-hover:scale-105 transition-transform duration-300"
+            />
+         </div>
+       </Link>
 
        {/* Content */}
        <div className="p-4 flex flex-col flex-1 bg-gray-50 border-t border-gray-100">
           <div className="text-xs text-gray-500 mb-1">{product.category}</div>
-          <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 h-10 mb-2 group-hover:text-advice-blue">
-            {product.name}
-          </h3>
+          
+          <Link to={`/product/${product.id}`} className="block">
+            <h3 className="text-sm font-semibold text-gray-800 line-clamp-2 h-10 mb-2 group-hover:text-advice-blue cursor-pointer">
+              {product.name}
+            </h3>
+          </Link>
+          
           <p className="text-xs text-gray-500 line-clamp-2 mb-3">{product.description}</p>
           
           <div className="mt-auto">
@@ -44,12 +51,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, onAdd }) => {
                ฿{finalPrice.toLocaleString()}
              </div>
              
-             <button 
-               onClick={() => onAdd(product)}
-               className="w-full mt-3 bg-advice-blue hover:bg-advice-darkBlue text-white text-sm font-medium py-2 rounded-sm flex items-center justify-center gap-2 transition-colors"
-             >
-               <ShoppingCart size={16} /> Add to Cart
-             </button>
+             <div className="flex gap-2 mt-3">
+               <button 
+                 onClick={() => onAdd(product)}
+                 className="flex-1 bg-advice-blue hover:bg-advice-darkBlue text-white text-sm font-medium py-2 rounded-sm flex items-center justify-center gap-2 transition-colors"
+               >
+                 <ShoppingCart size={16} /> Add
+               </button>
+               <Link 
+                 to={`/product/${product.id}`}
+                 className="px-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-sm flex items-center justify-center"
+               >
+                 <Eye size={16} />
+               </Link>
+             </div>
           </div>
        </div>
     </div>

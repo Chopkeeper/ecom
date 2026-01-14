@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Product } from '../types';
 import { generateProductDescription } from '../services/geminiService';
-import { Sparkles, Loader2, Tag } from 'lucide-react';
+import { Sparkles, Loader2, Tag, Image as ImageIcon } from 'lucide-react';
 
 interface AdminProductsProps {
   products: Product[];
@@ -12,13 +12,14 @@ interface AdminProductsProps {
 
 const AdminProducts: React.FC<AdminProductsProps> = ({ products, onAddProduct, onUpdateProduct, onDeleteProduct }) => {
   // Add Product Form State
-  const [formData, setFormData] = useState<Partial<Product>>({
+  const [formData, setFormData] = useState<Partial<Product> & { imagesInput: string }>({
     name: '',
     category: '',
     price: 0,
     shippingCost: 0,
     description: '',
-    image: 'https://picsum.photos/300/300',
+    image: 'https://picsum.photos/300/300', // Default fallback
+    imagesInput: '', // Raw text for multiple images
     stock: 10
   });
   const [isGenerating, setIsGenerating] = useState(false);
@@ -50,6 +51,14 @@ const AdminProducts: React.FC<AdminProductsProps> = ({ products, onAddProduct, o
     e.preventDefault();
     if (!formData.name || !formData.price) return;
     
+    // Parse images from textarea (newline separated)
+    const imagesArray = formData.imagesInput 
+        ? formData.imagesInput.split('\n').map(s => s.trim()).filter(s => s !== '') 
+        : [];
+    
+    // If no images provided, use the default placeholder
+    const primaryImage = imagesArray.length > 0 ? imagesArray[0] : (formData.image || 'https://picsum.photos/300/300');
+
     const newProduct: Product = {
       id: Date.now().toString(),
       name: formData.name,
@@ -58,14 +67,18 @@ const AdminProducts: React.FC<AdminProductsProps> = ({ products, onAddProduct, o
       shippingCost: formData.shippingCost || 0,
       discountPercent: 0, // Default to 0 for new products
       description: formData.description || '',
-      image: formData.image || 'https://picsum.photos/300/300',
+      image: primaryImage,
+      images: imagesArray.length > 0 ? imagesArray : [primaryImage],
       stock: formData.stock || 0
     };
 
     onAddProduct(newProduct);
     // Reset form
     setFormData({
-      name: '', category: '', price: 0, shippingCost: 0, description: '', image: 'https://picsum.photos/300/300', stock: 10
+      name: '', category: '', price: 0, shippingCost: 0, description: '', 
+      image: 'https://picsum.photos/300/300', 
+      imagesInput: '',
+      stock: 10
     });
     alert("Product added successfully!");
   };
@@ -129,6 +142,21 @@ const AdminProducts: React.FC<AdminProductsProps> = ({ products, onAddProduct, o
                          <label className="block text-sm font-medium text-gray-700">Shipping Cost</label>
                          <input type="number" name="shippingCost" value={formData.shippingCost} onChange={handleChange} className="w-full border p-2 rounded" />
                       </div>
+                   </div>
+                   
+                   {/* Multiple Image Input */}
+                   <div>
+                      <label className="block text-sm font-medium text-gray-700 flex items-center gap-2">
+                        <ImageIcon size={16}/> Product Images (URLs)
+                      </label>
+                      <p className="text-xs text-gray-400 mb-1">Enter one image URL per line. The first one will be the main cover.</p>
+                      <textarea 
+                        name="imagesInput" 
+                        value={formData.imagesInput} 
+                        onChange={handleChange} 
+                        className="w-full border p-2 rounded h-24 text-sm font-mono whitespace-pre" 
+                        placeholder="https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
+                      ></textarea>
                    </div>
 
                    <div>
@@ -235,6 +263,12 @@ const AdminProducts: React.FC<AdminProductsProps> = ({ products, onAddProduct, o
                             <td className="p-3">
                                <div className="font-semibold text-advice-blue">{p.name}</div>
                                <div className="text-xs text-gray-500">{p.category}</div>
+                               {/* Show number of images indicator */}
+                               {p.images && p.images.length > 1 && (
+                                   <div className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                                       <ImageIcon size={10} /> {p.images.length} images
+                                   </div>
+                               )}
                             </td>
                             <td className="p-3">฿{p.price.toLocaleString()}</td>
                             <td className="p-3">

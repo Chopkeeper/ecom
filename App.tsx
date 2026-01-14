@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
+import ProductDetail from './pages/ProductDetail';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminProducts from './pages/AdminProducts';
 import Checkout from './pages/Checkout';
@@ -25,6 +26,68 @@ const mockAdmin: User = {
   isAuthenticated: true
 };
 
+// Login Component
+const LoginForm: React.FC<{ onLogin: (u: string, p: string, isAdmin: boolean) => void }> = ({ onLogin }) => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isAdminMode, setIsAdminMode] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onLogin(username, password, isAdminMode);
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center h-[80vh]">
+       <div className="bg-white/95 backdrop-blur-sm p-8 rounded shadow-lg w-96">
+          <h2 className="text-2xl font-bold mb-6 text-center text-advice-blue">
+            {isAdminMode ? 'Admin System' : 'Member Login'}
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Username</label>
+              <input 
+                type="text" 
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full border p-2 rounded focus:ring-2 ring-advice-blue outline-none"
+                placeholder={isAdminMode ? "admin" : "Username"}
+                required 
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">Password</label>
+              <input 
+                type="password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border p-2 rounded focus:ring-2 ring-advice-blue outline-none"
+                placeholder={isAdminMode ? "Password" : "Password"}
+                required 
+              />
+            </div>
+            <button 
+              type="submit" 
+              className={`w-full text-white py-2 rounded font-bold transition ${isAdminMode ? 'bg-gray-800 hover:bg-black' : 'bg-advice-blue hover:bg-blue-700'}`}
+            >
+              {isAdminMode ? 'Login to Dashboard' : 'Login'}
+            </button>
+          </form>
+          
+          <div className="mt-6 text-center pt-4 border-t border-gray-100">
+             <button 
+               type="button"
+               onClick={() => { setIsAdminMode(!isAdminMode); setUsername(''); setPassword(''); }}
+               className="text-xs text-gray-500 underline hover:text-advice-blue"
+             >
+               Switch to {isAdminMode ? 'User' : 'Admin'} Login
+             </button>
+          </div>
+       </div>
+    </div>
+  );
+};
+
 const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
@@ -36,8 +99,22 @@ const App: React.FC = () => {
 
   // Load from local storage if available (omitted for brevity, using state)
 
-  const handleLogin = (asAdmin: boolean) => {
-    setUser(asAdmin ? mockAdmin : mockUser);
+  const handleLoginCheck = (u: string, p: string, isAdmin: boolean) => {
+    if (isAdmin) {
+      // STRICT CHECK for Admin
+      if (u === 'admin' && p === 'Chopkeeper') {
+        setUser(mockAdmin);
+        window.location.hash = '/admin/dashboard';
+      } else {
+        alert("Access Denied: Invalid Admin Credentials.");
+      }
+    } else {
+      // Simulation for User (Any input works for demo)
+      if (u.trim() !== "") {
+         setUser({ ...mockUser, name: u });
+         window.location.hash = '/';
+      }
+    }
   };
 
   const handleLogout = () => {
@@ -134,6 +211,13 @@ const App: React.FC = () => {
               />
             } />
             
+            <Route path="/product/:id" element={
+              <ProductDetail 
+                products={products}
+                onAddToCart={addToCart}
+              />
+            } />
+
             <Route path="/cart" element={
               <div className="container mx-auto p-4">
                  <div className="bg-white/90 p-6 rounded-lg shadow-lg backdrop-blur-sm">
@@ -170,13 +254,7 @@ const App: React.FC = () => {
             } />
 
             <Route path="/login" element={
-              <div className="flex flex-col items-center justify-center h-[80vh]">
-                 <div className="bg-white/95 backdrop-blur-sm p-8 rounded shadow-lg w-96">
-                    <h2 className="text-2xl font-bold mb-6 text-center text-advice-blue">Welcome Back</h2>
-                    <button onClick={() => handleLogin(false)} className="w-full bg-advice-blue text-white py-2 rounded mb-3 hover:bg-blue-700">Login as User</button>
-                    <button onClick={() => handleLogin(true)} className="w-full bg-gray-800 text-white py-2 rounded hover:bg-black">Login as Admin</button>
-                 </div>
-              </div>
+              <LoginForm onLogin={handleLoginCheck} />
             } />
 
             <Route path="/register" element={
@@ -184,7 +262,7 @@ const App: React.FC = () => {
                  <div className="bg-white/95 backdrop-blur-sm p-8 rounded shadow-lg w-96 text-center">
                     <h2 className="text-2xl font-bold mb-4">Register</h2>
                     <p className="text-gray-500 mb-4">Simulated Registration</p>
-                    <button onClick={() => handleLogin(false)} className="bg-advice-orange text-white px-6 py-2 rounded font-bold">Create Account</button>
+                    <button onClick={() => handleLoginCheck('New User', 'password', false)} className="bg-advice-orange text-white px-6 py-2 rounded font-bold">Create Account</button>
                  </div>
               </div>
             } />

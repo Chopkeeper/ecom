@@ -5,7 +5,8 @@ export interface Product {
   price: number;
   discountPercent: number;
   category: string;
-  image: string;
+  image: string; // Keep for backward compatibility (Thumbnail)
+  images?: string[]; // New field for multiple images
   stock: number;
   shippingCost: number;
 }
