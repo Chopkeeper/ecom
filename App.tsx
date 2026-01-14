@@ -106,7 +106,15 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="min-h-screen bg-[#f3f3f3] flex flex-col font-sans">
+      <div 
+        className="min-h-screen flex flex-col font-sans bg-cover bg-center bg-fixed bg-no-repeat"
+        style={{
+          // คุณสามารถเปลี่ยน URL ตรงนี้เป็นลิ้งค์รูปภาพที่คุณต้องการ
+          backgroundImage: "url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop')",
+          // หรือใช้เป็น linear-gradient ก็ได้ เช่น:
+          // backgroundImage: "linear-gradient(to bottom right, #e0e7ff, #f3f4f6)" 
+        }}
+      >
         <Navbar 
           user={user} 
           cartCount={cart.reduce((a, c) => a + c.quantity, 0)} 
@@ -128,23 +136,25 @@ const App: React.FC = () => {
             
             <Route path="/cart" element={
               <div className="container mx-auto p-4">
-                 <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>
-                 {cart.length === 0 ? <p>Cart is empty</p> : (
-                    <div>
-                      {cart.map(item => (
-                        <div key={item.id} className="flex justify-between items-center bg-white p-4 mb-2 shadow-sm">
-                           <div>{item.name} (x{item.quantity})</div>
-                           <div className="font-bold text-red-600">฿{(item.price * item.quantity).toLocaleString()}</div>
-                        </div>
-                      ))}
-                      <button 
-                        onClick={() => window.location.hash = '/checkout'}
-                        className="mt-4 bg-advice-blue text-white px-6 py-2 rounded font-bold"
-                      >
-                        Proceed to Checkout
-                      </button>
-                    </div>
-                 )}
+                 <div className="bg-white/90 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+                   <h1 className="text-2xl font-bold mb-4">Shopping Cart</h1>
+                   {cart.length === 0 ? <p>Cart is empty</p> : (
+                      <div>
+                        {cart.map(item => (
+                          <div key={item.id} className="flex justify-between items-center bg-white p-4 mb-2 shadow-sm border border-gray-100">
+                             <div>{item.name} (x{item.quantity})</div>
+                             <div className="font-bold text-red-600">฿{(item.price * item.quantity).toLocaleString()}</div>
+                          </div>
+                        ))}
+                        <button 
+                          onClick={() => window.location.hash = '/checkout'}
+                          className="mt-4 bg-advice-blue text-white px-6 py-2 rounded font-bold"
+                        >
+                          Proceed to Checkout
+                        </button>
+                      </div>
+                   )}
+                 </div>
               </div>
             } />
 
@@ -161,7 +171,7 @@ const App: React.FC = () => {
 
             <Route path="/login" element={
               <div className="flex flex-col items-center justify-center h-[80vh]">
-                 <div className="bg-white p-8 rounded shadow-lg w-96">
+                 <div className="bg-white/95 backdrop-blur-sm p-8 rounded shadow-lg w-96">
                     <h2 className="text-2xl font-bold mb-6 text-center text-advice-blue">Welcome Back</h2>
                     <button onClick={() => handleLogin(false)} className="w-full bg-advice-blue text-white py-2 rounded mb-3 hover:bg-blue-700">Login as User</button>
                     <button onClick={() => handleLogin(true)} className="w-full bg-gray-800 text-white py-2 rounded hover:bg-black">Login as Admin</button>
@@ -171,7 +181,7 @@ const App: React.FC = () => {
 
             <Route path="/register" element={
               <div className="flex flex-col items-center justify-center h-[80vh]">
-                 <div className="bg-white p-8 rounded shadow-lg w-96 text-center">
+                 <div className="bg-white/95 backdrop-blur-sm p-8 rounded shadow-lg w-96 text-center">
                     <h2 className="text-2xl font-bold mb-4">Register</h2>
                     <p className="text-gray-500 mb-4">Simulated Registration</p>
                     <button onClick={() => handleLogin(false)} className="bg-advice-orange text-white px-6 py-2 rounded font-bold">Create Account</button>
@@ -217,7 +227,7 @@ const App: React.FC = () => {
            </div>
         )}
 
-        <footer className="bg-white border-t mt-10 py-10">
+        <footer className="bg-white/90 border-t mt-10 py-10 backdrop-blur-sm">
            <div className="container mx-auto text-center text-gray-500 text-sm">
               <p>&copy; 2023 Advice-Like Clone. All rights reserved.</p>
               <p className="mt-2">Payment Verification System | PromptPay Integration</p>
