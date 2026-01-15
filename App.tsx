@@ -93,6 +93,7 @@ const App: React.FC = () => {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [orders, setOrders] = useState<Order[]>(MOCK_ORDERS);
+  const [taxRate, setTaxRate] = useState<number>(7); // Default VAT 7%
   
   // State for category filtering (Lifted up from Home)
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -139,13 +140,18 @@ const App: React.FC = () => {
     });
   };
 
-  const handlePlaceOrder = (items: CartItem[], total: number) => {
+  const handlePlaceOrder = (items: CartItem[], total: number, breakdown: any) => {
     if (!user) return;
     const newOrder: Order = {
       id: `ORD-${Date.now()}`,
       userId: user.id,
       items,
+      subtotal: breakdown.subtotal,
+      shippingTotal: breakdown.shipping,
+      taxAmount: breakdown.tax,
+      discountTotal: breakdown.discount,
       totalAmount: total,
+      appliedCoupons: breakdown.appliedCoupons,
       status: 'verified',
       paymentMethod: 'promptpay',
       timestamp: Date.now()
@@ -249,6 +255,7 @@ const App: React.FC = () => {
                   user={user} 
                   onPlaceOrder={handlePlaceOrder} 
                   clearCart={() => setCart([])}
+                  taxRate={taxRate}
                 />
               ) : <Navigate to="/login" />
             } />
@@ -269,7 +276,13 @@ const App: React.FC = () => {
 
             {/* Admin Routes */}
             <Route path="/admin/dashboard" element={
-               user?.role === 'admin' ? <AdminDashboard orders={orders} /> : <Navigate to="/" />
+               user?.role === 'admin' ? (
+                 <AdminDashboard 
+                   orders={orders} 
+                   taxRate={taxRate}
+                   onUpdateTaxRate={setTaxRate}
+                 /> 
+               ) : <Navigate to="/" />
             } />
             
             <Route path="/admin/products" element={

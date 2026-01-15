@@ -1,4 +1,4 @@
-import { Product, Order } from '../types';
+import { Product, Order, Coupon } from '../types';
 
 export const INITIAL_PRODUCTS: Product[] = [
   {
@@ -83,12 +83,22 @@ export const INITIAL_PRODUCTS: Product[] = [
   }
 ];
 
+export const INITIAL_COUPONS: Coupon[] = [
+  { id: 'c1', code: 'WELCOME100', type: 'fixed', value: 100, isActive: true },
+  { id: 'c2', code: 'SALE5', type: 'percent', value: 5, isActive: true },
+  { id: 'c3', code: 'FREESHIP', type: 'free_shipping', value: 0, isActive: true },
+];
+
 export const MOCK_ORDERS: Order[] = [
   {
     id: 'ORD-001',
     userId: 'user-1',
     items: [{ ...INITIAL_PRODUCTS[0], quantity: 1 }],
-    totalAmount: 22491, // Discounted
+    subtotal: 22491,
+    shippingTotal: 150,
+    taxAmount: 1574.37,
+    discountTotal: 0,
+    totalAmount: 24215.37,
     status: 'verified',
     paymentMethod: 'promptpay',
     timestamp: new Date('2023-10-15').getTime()
@@ -97,7 +107,11 @@ export const MOCK_ORDERS: Order[] = [
     id: 'ORD-002',
     userId: 'user-2',
     items: [{ ...INITIAL_PRODUCTS[2], quantity: 1 }],
-    totalAmount: 9015.5,
+    subtotal: 9015.5,
+    shippingTotal: 50,
+    taxAmount: 631.08,
+    discountTotal: 0,
+    totalAmount: 9696.58,
     status: 'verified',
     paymentMethod: 'promptpay',
     timestamp: new Date('2023-11-20').getTime()
@@ -106,21 +120,14 @@ export const MOCK_ORDERS: Order[] = [
     id: 'ORD-003',
     userId: 'user-3',
     items: [{ ...INITIAL_PRODUCTS[3], quantity: 1 }],
-    totalAmount: 10682,
-    status: 'verified',
+    subtotal: 10682,
+    shippingTotal: 80,
+    taxAmount: 747.74,
+    discountTotal: 0,
+    totalAmount: 11509.74,
+    status: 'issue_reported',
+    adminNote: 'Customer reported damaged box upon arrival.',
     paymentMethod: 'promptpay',
     timestamp: new Date('2023-12-05').getTime()
-  },
-  {
-    id: 'ORD-004',
-    userId: 'user-1',
-    items: [
-      { ...INITIAL_PRODUCTS[1], quantity: 1 },
-      { ...INITIAL_PRODUCTS[5], quantity: 1 }
-    ],
-    totalAmount: 4681.5,
-    status: 'verified',
-    paymentMethod: 'promptpay',
-    timestamp: new Date('2023-12-28').getTime()
   }
 ];

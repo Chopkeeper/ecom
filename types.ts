@@ -23,15 +23,34 @@ export interface CartItem extends Product {
   quantity: number;
 }
 
+export interface Coupon {
+  id: string;
+  code: string;
+  type: 'fixed' | 'percent' | 'free_shipping';
+  value: number; // Amount in THB or Percentage
+  isActive: boolean;
+}
+
 export interface Order {
   id: string;
   userId: string;
   items: CartItem[];
-  totalAmount: number;
-  status: 'pending' | 'paid' | 'verified' | 'shipped';
+  
+  // Financial breakdown
+  subtotal: number;
+  shippingTotal: number;
+  taxAmount: number;
+  discountTotal: number;
+  totalAmount: number; // Final Grand Total
+  
+  status: 'pending' | 'paid' | 'verified' | 'shipped' | 'issue_reported';
   paymentMethod: 'promptpay';
   timestamp: number;
   slipImage?: string;
+  
+  // Admin Management
+  adminNote?: string; // For reporting issues
+  appliedCoupons?: string[]; // List of codes used
 }
 
 export interface RevenueData {

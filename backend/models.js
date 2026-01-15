@@ -25,7 +25,17 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 
-// --- Order Schema ---
+// --- Coupon Schema (New) ---
+const couponSchema = new mongoose.Schema({
+  code: { type: String, required: true, unique: true },
+  type: { type: String, enum: ['fixed', 'percent', 'free_shipping'], required: true },
+  value: { type: Number, required: true },
+  isActive: { type: Boolean, default: true }
+}, { timestamps: true });
+
+const Coupon = mongoose.model('Coupon', couponSchema);
+
+// --- Order Schema (Updated) ---
 const orderSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   items: [{
@@ -36,16 +46,27 @@ const orderSchema = new mongoose.Schema({
     discountPercent: Number,
     shippingCost: Number
   }],
+  
+  // Financials
+  subtotal: { type: Number, required: true },
+  shippingTotal: { type: Number, required: true },
+  taxAmount: { type: Number, required: true },
+  discountTotal: { type: Number, default: 0 },
   totalAmount: { type: Number, required: true },
+  
   status: { 
     type: String, 
-    enum: ['pending', 'paid', 'verified', 'shipped'], 
+    enum: ['pending', 'paid', 'verified', 'shipped', 'issue_reported'], 
     default: 'pending' 
   },
   paymentMethod: { type: String, default: 'promptpay' },
-  slipImage: { type: String } // URL to uploaded slip
+  slipImage: { type: String },
+  
+  // Admin
+  adminNote: { type: String },
+  appliedCoupons: [{ type: String }]
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);
 
-module.exports = { Product, User, Order };
+module.exports = { Product, User, Order, Coupon };
